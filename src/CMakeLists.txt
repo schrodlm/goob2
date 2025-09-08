@@ -1,4 +1,5 @@
-add_library(goob STATIC goob.cpp)
-target_include_directories(goob PUBLIC
-    ${CMAKE_SOURCE_DIR}/include
-)
+add_subdirectory(renderer)
+add_subdirectory(image)
+
+add_library(goob INTERFACE)
+target_link_libraries(goob INTERFACE goob_renderer goob_image)
