@@ -603,33 +603,31 @@ namespace linalg
     template<class T> struct converter<std::array<T,4>, vec<T,4>> { std::array<T,4> operator() (const vec<T,4> & a) const { return {a[0], a[1], a[2], a[3]}; } };
 
     // Provide typedefs for common element types and vector/matrix sizes
-    namespace aliases
-    {
-        typedef vec<bool,1> bool1; typedef vec<uint8_t,1> byte1; typedef vec<int16_t,1> short1; typedef vec<uint16_t,1> ushort1;
-        typedef vec<bool,2> bool2; typedef vec<uint8_t,2> byte2; typedef vec<int16_t,2> short2; typedef vec<uint16_t,2> ushort2; 
-        typedef vec<bool,3> bool3; typedef vec<uint8_t,3> byte3; typedef vec<int16_t,3> short3; typedef vec<uint16_t,3> ushort3; 
-        typedef vec<bool,4> bool4; typedef vec<uint8_t,4> byte4; typedef vec<int16_t,4> short4; typedef vec<uint16_t,4> ushort4;
-        typedef vec<int,1> int1; typedef vec<unsigned,1> uint1; typedef vec<float,1> float1; typedef vec<double,1> double1;
-        typedef vec<int,2> int2; typedef vec<unsigned,2> uint2; typedef vec<float,2> float2; typedef vec<double,2> double2;
-        typedef vec<int,3> int3; typedef vec<unsigned,3> uint3; typedef vec<float,3> float3; typedef vec<double,3> double3;
-        typedef vec<int,4> int4; typedef vec<unsigned,4> uint4; typedef vec<float,4> float4; typedef vec<double,4> double4;
-        typedef mat<bool,1,1> bool1x1; typedef mat<int,1,1> int1x1; typedef mat<float,1,1> float1x1; typedef mat<double,1,1> double1x1;
-        typedef mat<bool,1,2> bool1x2; typedef mat<int,1,2> int1x2; typedef mat<float,1,2> float1x2; typedef mat<double,1,2> double1x2;
-        typedef mat<bool,1,3> bool1x3; typedef mat<int,1,3> int1x3; typedef mat<float,1,3> float1x3; typedef mat<double,1,3> double1x3;
-        typedef mat<bool,1,4> bool1x4; typedef mat<int,1,4> int1x4; typedef mat<float,1,4> float1x4; typedef mat<double,1,4> double1x4;
-        typedef mat<bool,2,1> bool2x1; typedef mat<int,2,1> int2x1; typedef mat<float,2,1> float2x1; typedef mat<double,2,1> double2x1;
-        typedef mat<bool,2,2> bool2x2; typedef mat<int,2,2> int2x2; typedef mat<float,2,2> float2x2; typedef mat<double,2,2> double2x2;
-        typedef mat<bool,2,3> bool2x3; typedef mat<int,2,3> int2x3; typedef mat<float,2,3> float2x3; typedef mat<double,2,3> double2x3;
-        typedef mat<bool,2,4> bool2x4; typedef mat<int,2,4> int2x4; typedef mat<float,2,4> float2x4; typedef mat<double,2,4> double2x4;
-        typedef mat<bool,3,1> bool3x1; typedef mat<int,3,1> int3x1; typedef mat<float,3,1> float3x1; typedef mat<double,3,1> double3x1;
-        typedef mat<bool,3,2> bool3x2; typedef mat<int,3,2> int3x2; typedef mat<float,3,2> float3x2; typedef mat<double,3,2> double3x2;
-        typedef mat<bool,3,3> bool3x3; typedef mat<int,3,3> int3x3; typedef mat<float,3,3> float3x3; typedef mat<double,3,3> double3x3;
-        typedef mat<bool,3,4> bool3x4; typedef mat<int,3,4> int3x4; typedef mat<float,3,4> float3x4; typedef mat<double,3,4> double3x4;
-        typedef mat<bool,4,1> bool4x1; typedef mat<int,4,1> int4x1; typedef mat<float,4,1> float4x1; typedef mat<double,4,1> double4x1;
-        typedef mat<bool,4,2> bool4x2; typedef mat<int,4,2> int4x2; typedef mat<float,4,2> float4x2; typedef mat<double,4,2> double4x2;
-        typedef mat<bool,4,3> bool4x3; typedef mat<int,4,3> int4x3; typedef mat<float,4,3> float4x3; typedef mat<double,4,3> double4x3;
-        typedef mat<bool,4,4> bool4x4; typedef mat<int,4,4> int4x4; typedef mat<float,4,4> float4x4; typedef mat<double,4,4> double4x4;
-    }
+
+    typedef vec<bool,1> bool1; typedef vec<uint8_t,1> byte1; typedef vec<int16_t,1> short1; typedef vec<uint16_t,1> ushort1;
+    typedef vec<bool,2> bool2; typedef vec<uint8_t,2> byte2; typedef vec<int16_t,2> short2; typedef vec<uint16_t,2> ushort2; 
+    typedef vec<bool,3> bool3; typedef vec<uint8_t,3> byte3; typedef vec<int16_t,3> short3; typedef vec<uint16_t,3> ushort3; 
+    typedef vec<bool,4> bool4; typedef vec<uint8_t,4> byte4; typedef vec<int16_t,4> short4; typedef vec<uint16_t,4> ushort4;
+    typedef vec<int,1> int1; typedef vec<unsigned,1> uint1; typedef vec<float,1> float1; typedef vec<double,1> double1;
+    typedef vec<int,2> int2; typedef vec<unsigned,2> uint2; typedef vec<float,2> float2; typedef vec<double,2> double2;
+    typedef vec<int,3> int3; typedef vec<unsigned,3> uint3; typedef vec<float,3> float3; typedef vec<double,3> double3;
+    typedef vec<int,4> int4; typedef vec<unsigned,4> uint4; typedef vec<float,4> float4; typedef vec<double,4> double4;
+    typedef mat<bool,1,1> bool1x1; typedef mat<int,1,1> int1x1; typedef mat<float,1,1> float1x1; typedef mat<double,1,1> double1x1;
+    typedef mat<bool,1,2> bool1x2; typedef mat<int,1,2> int1x2; typedef mat<float,1,2> float1x2; typedef mat<double,1,2> double1x2;
+    typedef mat<bool,1,3> bool1x3; typedef mat<int,1,3> int1x3; typedef mat<float,1,3> float1x3; typedef mat<double,1,3> double1x3;
+    typedef mat<bool,1,4> bool1x4; typedef mat<int,1,4> int1x4; typedef mat<float,1,4> float1x4; typedef mat<double,1,4> double1x4;
+    typedef mat<bool,2,1> bool2x1; typedef mat<int,2,1> int2x1; typedef mat<float,2,1> float2x1; typedef mat<double,2,1> double2x1;
+    typedef mat<bool,2,2> bool2x2; typedef mat<int,2,2> int2x2; typedef mat<float,2,2> float2x2; typedef mat<double,2,2> double2x2;
+    typedef mat<bool,2,3> bool2x3; typedef mat<int,2,3> int2x3; typedef mat<float,2,3> float2x3; typedef mat<double,2,3> double2x3;
+    typedef mat<bool,2,4> bool2x4; typedef mat<int,2,4> int2x4; typedef mat<float,2,4> float2x4; typedef mat<double,2,4> double2x4;
+    typedef mat<bool,3,1> bool3x1; typedef mat<int,3,1> int3x1; typedef mat<float,3,1> float3x1; typedef mat<double,3,1> double3x1;
+    typedef mat<bool,3,2> bool3x2; typedef mat<int,3,2> int3x2; typedef mat<float,3,2> float3x2; typedef mat<double,3,2> double3x2;
+    typedef mat<bool,3,3> bool3x3; typedef mat<int,3,3> int3x3; typedef mat<float,3,3> float3x3; typedef mat<double,3,3> double3x3;
+    typedef mat<bool,3,4> bool3x4; typedef mat<int,3,4> int3x4; typedef mat<float,3,4> float3x4; typedef mat<double,3,4> double3x4;
+    typedef mat<bool,4,1> bool4x1; typedef mat<int,4,1> int4x1; typedef mat<float,4,1> float4x1; typedef mat<double,4,1> double4x1;
+    typedef mat<bool,4,2> bool4x2; typedef mat<int,4,2> int4x2; typedef mat<float,4,2> float4x2; typedef mat<double,4,2> double4x2;
+    typedef mat<bool,4,3> bool4x3; typedef mat<int,4,3> int4x3; typedef mat<float,4,3> float4x3; typedef mat<double,4,3> double4x3;
+    typedef mat<bool,4,4> bool4x4; typedef mat<int,4,4> int4x4; typedef mat<float,4,4> float4x4; typedef mat<double,4,4> double4x4;
 
     // Provide output streaming operators, writing something that resembles an aggregate literal that could be used to construct the specified value
     namespace ostream_overloads
