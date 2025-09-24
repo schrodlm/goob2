@@ -5,17 +5,18 @@
 #include <initializer_list>
 #include <stdexcept>
 
+struct RGBAColor;
 struct RGBColor {
     uint8_t r, g, b;
-    RGBColor (uint8_t r, uint8_t g, uint8_t b) : r (r), g (g), b (b) {
+    constexpr RGBColor (uint8_t r, uint8_t g, uint8_t b) : r (r), g (g), b (b) {
     }
-    RGBColor (uint32_t code) {
+    constexpr RGBColor (uint32_t code) {
         r = (uint8_t)(code << 24 & 0xFF);
         g = (uint8_t)(code << 16 & 0xFF);
         b = (uint8_t)(code << 8 & 0xFF);
     }
 
-    RGBColor (std::initializer_list<uint8_t> arr) {
+    constexpr RGBColor (std::initializer_list<uint8_t> arr) {
         r = arr.size () >= 1 ? *arr.begin () : 0;
         g = arr.size () >= 2 ? *arr.begin () + 1 : 0;
         b = arr.size () >= 3 ? *arr.begin () + 2 : 0;
@@ -29,6 +30,9 @@ struct RGBColor {
 
         return code;
     }
+    
+    // Implicit conversion from RGBAColor
+    RGBColor(const RGBAColor& rgba);
 
     uint8_t operator[] (uint8_t i) const {
         switch (i) {
@@ -42,17 +46,17 @@ struct RGBColor {
 
 struct RGBAColor {
     uint8_t r, g, b, a;
-    RGBAColor (uint8_t r, uint8_t g, uint8_t b, uint8_t a)
+    constexpr RGBAColor (uint8_t r, uint8_t g, uint8_t b, uint8_t a)
     : r (r), g (g), b (b), a (a) {
     }
-    RGBAColor (uint32_t code) {
+    constexpr RGBAColor (uint32_t code) {
         r = (uint8_t)(code << 24 & 0xFF);
         g = (uint8_t)(code << 16 & 0xFF);
         b = (uint8_t)(code << 8 & 0xFF);
         a = (uint8_t)(code << 0 & 0xFF);
     }
 
-    RGBAColor (std::initializer_list<uint8_t> arr) {
+    constexpr RGBAColor (std::initializer_list<uint8_t> arr) {
         r = arr.size () >= 1 ? *arr.begin () : 0;
         g = arr.size () >= 2 ? *arr.begin () + 1 : 0;
         b = arr.size () >= 3 ? *arr.begin () + 2 : 0;
