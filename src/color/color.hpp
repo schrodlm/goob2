@@ -73,13 +73,7 @@ struct RGBAColor {
         return code;
     }
 
-    static RGBAColor from_rgb (RGBColor rgb) {
-        return RGBAColor (rgb.r, rgb.g, rgb.b, 0);
-    }
-
-    RGBColor to_rgb () const {
-        return RGBColor (r, g, b);
-    }
+    RGBAColor(const RGBColor& rgb) : r(rgb.r), g(rgb.g), b(rgb.b), a(255) {}
 
     uint8_t operator[] (uint8_t i) const {
         switch (i) {
@@ -91,3 +85,18 @@ struct RGBAColor {
         }
     }
 };
+
+// Define the RGBColor constructor that was forward declared
+inline RGBColor::RGBColor(const RGBAColor& rgba) : r(rgba.r), g(rgba.g), b(rgba.b) {}
+
+static constexpr RGBAColor TEST = RGBAColor(0,0,0,255);
+
+namespace Colors  {
+    constexpr RGBAColor BLACK = RGBAColor(0,0,0,255);
+    constexpr RGBAColor WHITE = RGBAColor(255,255,255,255);
+    constexpr RGBAColor RED = RGBAColor(255,0,0,255);
+    constexpr RGBAColor GREEN = RGBAColor(0,255,0,255);
+    constexpr RGBAColor BLUE = RGBAColor(0,0,255,255);
+}
+
+
