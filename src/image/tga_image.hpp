@@ -3,6 +3,7 @@
 #include <cstdint>
 #include <expected>
 #include <filesystem>
+#include <string>
 
 #include "color.hpp"
 #include "vector.hpp"
@@ -13,11 +14,17 @@ enum class RotationDirection {
     vertical,
 };
 
-enum class ReadError {
-    BAD_FILE,
-    DATA_READ_ERROR,
-    HEADER_READ_ERROR,
+enum class TgaImageError {
+#define DEFINE_ERROR(name, value) name = value,
+
+// include the list to expand the macro for each error
+#include "error_list.txt"
+
+// undefine the macro to prevent it from leaking
+#undef DEFINE_ERROR
 };
+
+std::string error_to_string(TgaImageError);
 
 enum class TgaImageType {
     COLOR_MAPPED     = 0b0001,                // 1
@@ -32,9 +39,9 @@ enum class TgaImageType {
 #pragma pack(push, 1)
 // Image header is 18 bytes and must not be naturally aligned by the compiler
 struct TgaImageHeader {
-    std::uint8_t idlength;        // length of a string located after the header
-    std::uint8_t colour_map_type; // 0 - image file contains no color map,
-                                  // 1 - color map present
+    std::uint8_t id_length;      // length of a string located after the header
+    std::uint8_t color_map_type; // 0 - image file contains no color map,
+                                 // 1 - color map present
     /*
     0 - no image data is present
     1 - uncompressed color-mapped image
@@ -45,11 +52,11 @@ struct TgaImageHeader {
     11 - run-length encoded grayscale image
     */
     std::uint8_t data_type_code;
-    std::uint16_t colour_map_origin; // index of first color map entry that
-                                     // is included in the file
-    std::uint16_t colour_map_length; // number of entries of the color map
-                                     // that are included in the file
-    std::uint8_t colour_map_depth;   // number of bits per color map entry
+    std::uint16_t color_map_origin; // index of first color map entry that
+                                    // is included in the file
+    std::uint16_t color_map_length; // number of entries of the color map
+                                    // that are included in the file
+    std::uint8_t color_map_depth;   // number of bits per color map entry
     std::uint16_t x_origin;      // absolute coordinate of lower-left corner for
                                  // displays where origin is at the lower left
     std::uint16_t y_origin;      // as for X-origin
@@ -78,12 +85,17 @@ class TgaImage {
 
     uint16_t get_width() const;
     uint16_t get_height() const;
+    virtual TgaImageHeader get_header() const {
+        return header;
+    };
 
-    RGBColor operator[](linalg::uint2& pos) {
+    virtual RGBColor operator[](linalg::uint2& pos) {
         if(pos.x >= header.width || pos.y >= header.height)
             throw std::out_of_range("...");
         return RGBColor(data[0]);
     }
+
+    virtual ~TgaImage() = default;
 
     protected:
     TgaImage(uint16_t height, uint16_t width, RGBColor color = Colors::BLACK);
