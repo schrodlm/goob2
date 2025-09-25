@@ -5,7 +5,10 @@
 #include "tga_image.hpp"
 
 namespace tga {
-std::expected<std::unique_ptr<TgaImage>, ReadError> open(std::filesystem::path filepath);
-std::unique_ptr<TgaImage> create(TgaImageHeader header, RGBColor color = Colors::BLACK);
-std::unique_ptr<TgaImage> create(TgaImageHeader header, std::span<uint8_t> data);
+[[nodiscard]] std::expected<std::unique_ptr<TgaImage>, TgaImageError> open(
+std::filesystem::path filepath) noexcept;
+[[nodiscard]] std::expected<std::unique_ptr<TgaImage>, TgaImageError>
+create(TgaImageHeader header, RGBColor color = Colors::BLACK) noexcept;
+[[nodiscard]] std::expected<std::unique_ptr<TgaImage>, TgaImageError>
+create(TgaImageHeader header, std::span<uint8_t> data) noexcept;
 } // namespace tga
