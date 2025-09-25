@@ -11,3 +11,4 @@ list(APPEND CMAKE_MODULE_PATH ${catch2_SOURCE_DIR}/extras)
 include(CTest)
 
 add_subdirectory(renderer)
+add_subdirectory(image)

@@ -11,6 +11,8 @@ else()
     add_compile_options(-Wall -Wextra -Wshadow -Wnon-virtual-dtor -Wunused -pedantic)
 endif()
 
+set(PROJECT_ROOT ${CMAKE_SOURCE_DIR})
+set(ASSETS_PATH "${PROJECT_ROOT}/assets")
 
 add_subdirectory(src)
 add_subdirectory(sandbox)
