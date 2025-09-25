@@ -73,6 +73,7 @@ struct TgaImageHeader {
     std::uint8_t image_descriptor;
 };
 #pragma pack(pop)
+static_assert(sizeof(TgaImageHeader) == 18);
 
 
 class TgaImage {
