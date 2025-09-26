@@ -84,11 +84,18 @@ class TgaImage {
 
     void write(std::filesystem::path filepath);
 
-    uint16_t get_width() const;
-    uint16_t get_height() const;
-    virtual TgaImageHeader get_header() const {
+    uint16_t get_width() const {
+        return header.width;
+    }
+    uint16_t get_height() const {
+        return header.height;
+    }
+    const TgaImageHeader& get_header() const {
         return header;
-    };
+    }
+    const std::span<const uint8_t> get_data() const {
+        return data;
+    }
 
     virtual RGBColor operator[](linalg::uint2& pos) {
         if(pos.x >= header.width || pos.y >= header.height)
