@@ -6,6 +6,7 @@
 #include "color.hpp"
 #include "tga_image.hpp"
 #include "vector.hpp"
+#include <utility>
 
 
 namespace tga {
@@ -13,15 +14,12 @@ class TgaImageColorMapped : public TgaImage {
     public:
     TgaImageColorMapped(TgaImageHeader header, std::span<uint8_t> data)
     : TgaImage(header, data) {};
-
-    RGBColor get(linalg::uint2& pos) const;
 };
 
 class TgaImageRGB : public TgaImage {
     public:
-    TgaImageRGB(TgaImageHeader header, std::span<uint8_t> data)
-    : TgaImage(header, data) {};
-    RGBColor get(linalg::uint2& pos) const;
+    TgaImageRGB(TgaImageHeader header, std::span<uint8_t> data);
+    TgaImageRGB(uint32_t width, uint32_t height, RGBColor color = Colors::WHITE);
 };
 
 class TgaImageGrayscale : public TgaImage {

@@ -23,16 +23,18 @@ TgaImage::TgaImage(uint16_t height, uint16_t width, uint8_t bits_per_pixel) {
     header.height = height;
     header.bits_per_pixel = bits_per_pixel;
     bytes_per_pixel       = utils::minimum_bytes_to_represent(bits_per_pixel);
-    memset(data.data(), 0, height * width * bytes_per_pixel);
+    data.assign(height * width * bytes_per_pixel, 0);
 }
 
 TgaImage::TgaImage(TgaImageHeader header, std::span<uint8_t>& data_in)
 : header(header) {
+    bytes_per_pixel = utils::minimum_bytes_to_represent(header.bits_per_pixel);
     data.assign(data_in.begin(), data_in.end());
 }
 
-TgaImage::TgaImage(TgaImageHeader header, RGBColor color /*= Colors::BLACK*/) : header(header) {
-    data.assign(header.width * header.height, color.to_code());
+TgaImage::TgaImage(TgaImageHeader header) : header(header) {
+    bytes_per_pixel = utils::minimum_bytes_to_represent(header.bits_per_pixel);
+    data.assign(header.width * header.height * bytes_per_pixel, 0);
 }
 
 

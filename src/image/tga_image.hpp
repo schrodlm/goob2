@@ -51,7 +51,7 @@ struct TgaImageHeader {
     10 - run-length encoded true-color image
     11 - run-length encoded grayscale image
     */
-    std::uint8_t data_type_code;
+    std::uint8_t data_type_code;    // TODO: Change to TgaImageType
     std::uint16_t color_map_origin; // index of first color map entry that
                                     // is included in the file
     std::uint16_t color_map_length; // number of entries of the color map
@@ -111,7 +111,7 @@ class TgaImage {
     protected:
     TgaImage(uint16_t height, uint16_t width, uint8_t bits_per_pixel);
     TgaImage(TgaImageHeader header, std::span<uint8_t>& data);
-    TgaImage(TgaImageHeader header, RGBColor color = Colors::BLACK);
+    TgaImage(TgaImageHeader header);
 
     TgaImageHeader header;
     std::vector<uint8_t> data;
