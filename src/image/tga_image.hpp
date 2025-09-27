@@ -90,6 +90,9 @@ class TgaImage {
     uint16_t get_height() const {
         return header.height;
     }
+    uint16_t get_bytes_per_pixel() const {
+        return bytes_per_pixel;
+    }
     const TgaImageHeader& get_header() const {
         return header;
     }
@@ -106,12 +109,13 @@ class TgaImage {
     virtual ~TgaImage() = default;
 
     protected:
-    TgaImage(uint16_t height, uint16_t width, RGBColor color = Colors::BLACK);
+    TgaImage(uint16_t height, uint16_t width, uint8_t bits_per_pixel);
     TgaImage(TgaImageHeader header, std::span<uint8_t>& data);
     TgaImage(TgaImageHeader header, RGBColor color = Colors::BLACK);
 
     TgaImageHeader header;
     std::vector<uint8_t> data;
+    uint16_t bytes_per_pixel;
 };
 
 

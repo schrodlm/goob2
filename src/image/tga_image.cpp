@@ -4,6 +4,7 @@
 
 
 #include "tga_image.hpp"
+#include "utils.hpp"
 
 namespace tga {
 
@@ -17,10 +18,12 @@ std::string error_to_string(TgaImageError error) {
     }
 }
 
-TgaImage::TgaImage(uint16_t height, uint16_t width, RGBColor color) {
+TgaImage::TgaImage(uint16_t height, uint16_t width, uint8_t bits_per_pixel) {
     header.width  = width;
     header.height = height;
-    memset(data.data(), color.to_code(), height * width);
+    header.bits_per_pixel = bits_per_pixel;
+    bytes_per_pixel       = utils::minimum_bytes_to_represent(bits_per_pixel);
+    memset(data.data(), 0, height * width * bytes_per_pixel);
 }
 
 TgaImage::TgaImage(TgaImageHeader header, std::span<uint8_t>& data_in)
