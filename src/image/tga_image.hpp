@@ -26,7 +26,7 @@ enum class TgaImageError {
 
 std::string error_to_string(TgaImageError);
 
-enum class TgaImageType {
+enum class TgaImageType : uint8_t {
     COLOR_MAPPED     = 0b0001,                // 1
     RGB              = 0b0010,                // 2
     GRAYSCALE        = 0b0011,                // 3
@@ -51,7 +51,7 @@ struct TgaImageHeader {
     10 - run-length encoded true-color image
     11 - run-length encoded grayscale image
     */
-    std::uint8_t data_type_code;    // TODO: Change to TgaImageType
+    std::uint8_t data_type_code;
     std::uint16_t color_map_origin; // index of first color map entry that
                                     // is included in the file
     std::uint16_t color_map_length; // number of entries of the color map
