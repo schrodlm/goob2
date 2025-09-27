@@ -2,6 +2,9 @@
 #include "tga_image.hpp"
 #include "tga_image_impl.hpp"
 
+#include <expected>
+
+
 #include <filesystem>
 #include <fstream>
 #include <stdexcept>
@@ -42,19 +45,29 @@ std::filesystem::path filepath) noexcept {
     return create(header, data);
 }
 
-std::expected<std::unique_ptr<TgaImage>, TgaImageError> create(TgaImageHeader header, std::span<uint8_t> data) noexcept {
+std::expected<std::unique_ptr<TgaImage>, TgaImageError>
+create(TgaImageHeader header, std::span<uint8_t> data) noexcept {
     TgaImageType type = static_cast<TgaImageType>(header.data_type_code);
     switch(type) {
     case TgaImageType::COLOR_MAPPED:
     case TgaImageType::RLE_COLOR_MAPPED:
+        if(!verify_header<TgaImageColorMapped>(header)) {
+            return std::unexpected(TgaImageError::INVALID_HEADER);
+        }
         return std::make_unique<TgaImageColorMapped>(header, data);
 
     case TgaImageType::RGB:
     case TgaImageType::RLE_RGB:
+        if(!verify_header<TgaImageRGB>(header)) {
+            return std::unexpected(TgaImageError::INVALID_HEADER);
+        }
         return std::make_unique<TgaImageRGB>(header, data);
 
     case TgaImageType::GRAYSCALE:
     case TgaImageType::RLE_GRAYSCALE:
+        if(verify_header<TgaImageGrayscale>(header)) {
+            return std::unexpected(TgaImageError::INVALID_HEADER);
+        }
         return std::make_unique<TgaImageGrayscale>(header, data);
 
     default: return std::unexpected(TgaImageError::BAD_TYPE);
