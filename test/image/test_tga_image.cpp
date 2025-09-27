@@ -1,10 +1,10 @@
 #include "tga_factory.hpp"
 #include "tga_image.hpp"
 #include "tga_image_impl.hpp"
+#include "utils.hpp"
 
 #include <catch2/catch_test_macros.hpp>
 #include <filesystem>
-#include <iostream>
 
 
 std::filesystem::path assets_path = ASSETS_DIR;
@@ -22,23 +22,26 @@ bool header_equals(const tga::TgaImageHeader& lhs, const tga::TgaImageHeader& rh
 
 TEST_CASE("tga images can be opened", "[tga_open]") {
     REQUIRE(std::filesystem::exists(assets_path));
-    tga::TgaImageHeader header = { .id_length = 0x00,
-        .color_map_type                       = 0x00,
-        .data_type_code                       = 0x02,
-        .color_map_origin                     = 0x00,
-        .color_map_length                     = 0x00,
-        .color_map_depth                      = 0x00,
-        .x_origin                             = 0x00,
-        .y_origin                             = 0x00,
-        .width                                = 0x200,
-        .height                               = 0x200,
-        .bits_per_pixel                       = 0x18,
-        .image_descriptor                     = 0x00 };
-    std::vector<uint8_t> data(header.height * header.width);
+    constexpr tga::TgaImageHeader header = { .id_length = 0x00,
+        .color_map_type                                 = 0x00,
+        .data_type_code                                 = 0x02,
+        .color_map_origin                               = 0x00,
+        .color_map_length                               = 0x00,
+        .color_map_depth                                = 0x00,
+        .x_origin                                       = 0x00,
+        .y_origin                                       = 0x00,
+        .width                                          = 0x200,
+        .height                                         = 0x200,
+        .bits_per_pixel                                 = 0x18,
+        .image_descriptor                               = 0x00 };
+    constexpr uint16_t bytes_per_pixel =
+    utils::minimum_bytes_to_represent(header.bits_per_pixel);
+    std::vector<uint8_t> data(header.height * header.width * bytes_per_pixel);
 
     std::ignore = tga::open(assets_path / "test" / "earth.tga")
-                  .transform([header](std::unique_ptr<tga::TgaImage> opened_image) {
+                  .transform([header, data](std::unique_ptr<tga::TgaImage> opened_image) {
                       REQUIRE(header_equals(header, opened_image->get_header()));
+                      REQUIRE(data.size() == opened_image->get_data().size());
                       return opened_image;
                   })
                   .or_else([&](const auto& error) -> decltype(tga::open("")) {
