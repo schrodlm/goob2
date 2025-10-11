@@ -3,12 +3,19 @@
 #include <cstdint>
 #include <expected>
 #include <filesystem>
+#include <optional>
 #include <string>
 
 #include "color.hpp"
 #include "vector.hpp"
 
 namespace tga {
+
+// Specifies the version of the TGAImage (New TGA Format if present, Original TGA Format if not)
+#define TGA_SIGNATURE_SIZE 18
+constexpr std::array<uint8_t, TGA_SIGNATURE_SIZE> TGA_SIGNATURE = { 'T', 'R', 'U',
+    'E', 'V', 'I', 'S', 'I', 'O', 'N', '-', 'X', 'F', 'I', 'L', 'E', '.', 0 };
+
 enum class RotationDirection {
     horizontal,
     vertical,
@@ -91,7 +98,7 @@ scan bytes 8-23 of the footer as ASCII characters and determine whether they mat
 struct TgaImageFooter {
     uint32_t extension_area_offset;
     uint32_t developer_directory_offset;
-    std::array<uint8_t, 18> signature;
+    std::array<uint8_t, TGA_SIGNATURE_SIZE> signature;
 };
 #pragma pack(pop)
 
@@ -117,6 +124,9 @@ class TgaImage {
     const TgaImageHeader& get_header() const {
         return header;
     }
+    const std::optional<TgaImageFooter>& get_footer() const {
+        return footer;
+    }
     const std::span<const uint8_t> get_data() const {
         return data;
     }
@@ -130,11 +140,15 @@ class TgaImage {
     virtual ~TgaImage() = default;
 
     protected:
-    TgaImage(uint16_t height, uint16_t width, uint8_t bits_per_pixel);
-    TgaImage(TgaImageHeader header, std::span<uint8_t>& data);
-    TgaImage(TgaImageHeader header);
+    TgaImage(uint16_t height, uint16_t width, uint8_t bits_per_pixel, std::optional<TgaImageFooter> footer);
+    TgaImage(TgaImageHeader header, std::span<uint8_t>& data, std::optional<TgaImageFooter> footer);
+    TgaImage(TgaImageHeader header, std::optional<TgaImageFooter> footer);
 
     TgaImageHeader header;
+    // not present when working Original TGA Format
+    std::optional<TgaImageFooter> footer;
+    // TODO: Add developer area data
+    // TODO: Add extension area data
     std::vector<uint8_t> data;
     uint16_t bytes_per_pixel;
 };

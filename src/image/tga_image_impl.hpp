@@ -10,23 +10,11 @@
 
 
 namespace tga {
-class TgaImageColorMapped : public TgaImage {
-    public:
-    TgaImageColorMapped(TgaImageHeader header, std::span<uint8_t> data)
-    : TgaImage(header, data) {};
-};
 
-class TgaImageRGB : public TgaImage {
-    public:
-    TgaImageRGB(TgaImageHeader header, std::span<uint8_t> data);
-    TgaImageRGB(uint32_t width, uint32_t height, RGBColor color = Colors::WHITE);
-};
+class TgaImageColorMapped;
+class TgaImageRGB;
+class TgaImageGrayscale;
 
-class TgaImageGrayscale : public TgaImage {
-    public:
-    TgaImageGrayscale(TgaImageHeader header, std::span<uint8_t> data)
-    : TgaImage(header, data) {};
-};
 template <typename T>
 concept IsTgaImageOrDerived = std::is_base_of_v<TgaImage, T>;
 
@@ -106,4 +94,38 @@ constexpr bool verify_header(TgaImageHeader& header) {
         static_assert(std::is_void_v<T> && !std::is_void_v<T>, "Unsupported TGA image type");
     }
 }
+
+
+constexpr TgaImageFooter get_default_tga_footer() {
+    return TgaImageFooter{ .extension_area_offset = 0,
+        .developer_directory_offset               = 0,
+        .signature                                = { TGA_SIGNATURE } };
+}
+
+class TgaImageColorMapped : public TgaImage {
+    public:
+    TgaImageColorMapped(TgaImageHeader header,
+    std::span<uint8_t> data,
+    std::optional<TgaImageFooter> footer = get_default_tga_footer())
+    : TgaImage(header, data, footer) {};
+};
+
+class TgaImageRGB : public TgaImage {
+    public:
+    TgaImageRGB(TgaImageHeader header,
+    std::span<uint8_t> data,
+    std::optional<TgaImageFooter> footer = get_default_tga_footer());
+    TgaImageRGB(uint32_t width,
+    uint32_t height,
+    RGBColor color                       = Colors::WHITE,
+    std::optional<TgaImageFooter> footer = get_default_tga_footer());
+};
+
+class TgaImageGrayscale : public TgaImage {
+    public:
+    TgaImageGrayscale(TgaImageHeader header,
+    std::span<uint8_t> data,
+    std::optional<TgaImageFooter> footer = get_default_tga_footer())
+    : TgaImage(header, data, footer) {};
+};
 }; // namespace tga
