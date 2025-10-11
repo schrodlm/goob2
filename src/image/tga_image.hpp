@@ -75,6 +75,27 @@ struct TgaImageHeader {
 #pragma pack(pop)
 static_assert(sizeof(TgaImageHeader) == 18);
 
+/*
+Bytes 0-3: The Extension Area Offset
+Bytes 4-7: The Developer Directory Offset
+Bytes 8-23: The Signature
+Byte 24: ASCII Character "."
+Byte 25: Binary zero string terminator (0x00)
+
+Note: A TGA Reader should begin by determining whether the desired file is in the Original TGA Format or the New TGA Format.
+This is accomplished by examining the last 26 bytes of the file.
+To determine whether the acquired data constitutes a legal TGA File Footer,
+scan bytes 8-23 of the footer as ASCII characters and determine whether they match the signature string: TRUEVISION-XFILE
+*/
+#pragma pack(push, 1)
+struct TgaImageFooter {
+    uint32_t extension_area_offset;
+    uint32_t developer_directory_offset;
+    std::array<uint8_t, 18> signature;
+};
+#pragma pack(pop)
+
+static_assert(sizeof(TgaImageFooter) == 26);
 
 class TgaImage {
     public:
