@@ -5,9 +5,13 @@
 
 #include <catch2/catch_test_macros.hpp>
 #include <filesystem>
+#include <iostream>
 
 
 std::filesystem::path assets_path = ASSETS_DIR;
+
+// 512*512 RGB TGAv2 image (uses default footer)
+std::filesystem::path earth_image = assets_path / "test" / "earth.tga";
 
 bool header_equals(const tga::TgaImageHeader& lhs, const tga::TgaImageHeader& rhs) {
     return lhs.id_length == rhs.id_length && lhs.color_map_type == rhs.color_map_type &&
@@ -18,6 +22,12 @@ bool header_equals(const tga::TgaImageHeader& lhs, const tga::TgaImageHeader& rh
     lhs.y_origin == rhs.y_origin&& lhs.width == rhs.width&& lhs.height ==
     rhs.height&& lhs.bits_per_pixel == rhs.bits_per_pixel;
     lhs.image_descriptor&& rhs.image_descriptor;
+}
+
+bool footer_equals(const tga::TgaImageFooter& lhs, const tga::TgaImageFooter& rhs) {
+    return lhs.developer_directory_offset == rhs.developer_directory_offset &&
+    lhs.extension_area_offset == rhs.extension_area_offset &&
+    lhs.signature == rhs.signature;
 }
 
 TEST_CASE("tga images can be opened", "[tga_open]") {
@@ -38,10 +48,13 @@ TEST_CASE("tga images can be opened", "[tga_open]") {
     utils::minimum_bytes_to_represent(header.bits_per_pixel);
     std::vector<uint8_t> data(header.height * header.width * bytes_per_pixel);
 
-    std::ignore = tga::open(assets_path / "test" / "earth.tga")
+    std::ignore = tga::open(earth_image)
                   .transform([header, data](std::unique_ptr<tga::TgaImage> opened_image) {
                       REQUIRE(header_equals(header, opened_image->get_header()));
                       REQUIRE(data.size() == opened_image->get_data().size());
+                      REQUIRE(opened_image->get_footer().has_value());
+                      REQUIRE(footer_equals(tga::get_default_tga_footer(),
+                      *opened_image->get_footer()));
                       return opened_image;
                   })
                   .or_else([&](const auto& error) -> decltype(tga::open("")) {
